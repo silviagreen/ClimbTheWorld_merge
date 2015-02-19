@@ -1,5 +1,13 @@
-cardsUILib/*
-facebookSDK/*
-staggeredgrid_etsy/*
-tooltip_library/*
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+
+/cardsUILib
+/facebookSDK
+/staggeredgrid_etsy
+/tooltip_library
+
 
