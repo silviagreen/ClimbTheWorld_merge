@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.unipd.nbeghin.climbtheworld.AlgorithmConfigFragment;
 import org.unipd.nbeghin.climbtheworld.ClimbApplication;
 import org.unipd.nbeghin.climbtheworld.MainActivity;
@@ -271,7 +275,7 @@ public final class AlarmUtils {
     }
     */
     
-    public static Alarm getAlarm(Context context, int alarm_id){ 
+    public static Alarm getAlarm(Context context, int alarm_id){  //filtrare per id utente
     	
     	return DbHelper.getInstance(context).getAlarmDao().queryForId(alarm_id);
     }
@@ -345,7 +349,7 @@ public final class AlarmUtils {
 	
 	
 	
-    public static List<Alarm> getAllAlarms(Context context) {
+    public static List<Alarm> getAllAlarms(Context context) { //filtrare per id utente
     	
     	DbHelper helper = DbHelper.getInstance(context);
     	    	
@@ -1605,7 +1609,53 @@ public final class AlarmUtils {
 		return pairs;		
 	}
 	
-	
+	public static JSONObject toJSONObject(List<Alarm> alarms){
+        JSONObject json_alarms = new JSONObject();
+        for(Alarm alarm: alarms){
+            try {
+                json_alarms.put(String.valueOf(alarm.get_id()), alarm.toJSON());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return json_alarms;
+    }
+
+    public static void fromJSONtoAlarm(Context context, JSONObject alarms){
+        DbHelper helper = DbHelper.getInstance(context);
+        RuntimeExceptionDao<Alarm, Integer> alarmDao = helper.getAlarmDao();
+
+        Iterator<String> it = alarms.keys();
+        while(it.hasNext()){
+            try {
+                String alarm_id = it.next();
+                JSONObject json_alarm = alarms.getJSONObject(alarm_id);
+                Alarm alarm  = getAlarm(context, Integer.valueOf(alarm_id)); //get per id e utente
+                if(alarm == null) alarm = new Alarm();
+                alarm.set_actionType(Boolean.valueOf(json_alarm.getString("actionType")));
+                alarm.set_hour(Integer.valueOf(json_alarm.getInt("hour")));
+                alarm.set_minute(json_alarm.getInt("minute"));
+                alarm.set_second(json_alarm.getInt("seconds"));
+                JSONArray repeatingDays = json_alarm.getJSONArray("repeatingDays");
+                for(int i = 0; i < repeatingDays.length(); i++)
+                    alarm.setRepeatingDay(i, repeatingDays.getBoolean(i));
+                JSONArray evaluations = json_alarm.getJSONArray("evaluations");
+                for(int i = 0; i < evaluations.length(); i++)
+                    alarm.setEvaluation(i, (float) evaluations.getDouble(i));
+                JSONArray stepsInterval = json_alarm.getJSONArray("stepsInterval");
+                for(int i = 0; i < stepsInterval.length(); i++)
+                    alarm.setStepsInterval(i, stepsInterval.getBoolean(i));
+
+                alarmDao.createOrUpdate(alarm);
+
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	
 	
 	

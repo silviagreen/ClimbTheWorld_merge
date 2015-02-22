@@ -48,7 +48,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.multidex.MultiDex;
+//import android.support.multidex.MultiDex;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -173,11 +173,11 @@ public class ClimbApplication extends Application {
 		currentUser = user;
 	}
 	
-	@Override 
-	protected void attachBaseContext(Context base) {
-		  super.attachBaseContext(base);
-		  MultiDex.install(this);
-		}
+//	@Override
+//	protected void attachBaseContext(Context base) {
+//		  super.attachBaseContext(base);
+//		  MultiDex.install(this);
+//		}
 	
 	public static void setDoneTutorial(User user){
 		SharedPreferences pref = getContext().getSharedPreferences("UserSession", 0);

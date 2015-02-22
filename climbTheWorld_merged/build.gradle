@@ -19,7 +19,7 @@ android {
             targetCompatibility JavaVersion.VERSION_1_5
         }
         // Enabling multidex support.
-        multiDexEnabled true
+        //multiDexEnabled true
     }
 
     buildTypes {
@@ -39,7 +39,7 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.+'
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.google.android.gms:play-services-location:+'
     compile files('libs/Parse-1.8.0.jar')
     compile files('libs/ormlite-android-4.46.jar')
     compile files('libs/ormlite-core-4.46.jar')

@@ -1,5 +1,7 @@
 package org.unipd.nbeghin.climbtheworld.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.unipd.nbeghin.climbtheworld.util.GeneralUtils;
 
 import com.j256.ormlite.field.DataType;
@@ -86,10 +88,10 @@ public class Alarm {
      * @param hour
      * @param minute
      * @param second
-     * @param type
+     * @param actionType
      * @param repeatingDays
-     * @param repeatWeekly
-     * @param isEnabled
+     * @param repeatingDays
+     * @param evaluations
      */
     public Alarm(int hour, int minute, int second, boolean actionType, boolean[] repeatingDays, float[] evaluations) {
 		
@@ -116,7 +118,7 @@ public class Alarm {
      * @param hour
      * @param minute
      * @param second
-     * @param type
+     * @param actionType
      */
     
     public Alarm(int hour, int minute, int second, boolean actionType) {
@@ -234,6 +236,23 @@ public class Alarm {
     
     public boolean isStepsInterval(int dayOfWeek) {
         return stepsInterval[dayOfWeek];
+    }
+
+    public JSONObject toJSON(){
+        JSONObject description = new JSONObject();
+        try {
+            description.put("hour", get_hour());
+            description.put("minute", get_minute());
+            description.put("seconds", get_second());
+            description.put("actionType", get_actionType());
+            description.put("repeatingDays", repeatingDays); //controllare se va bene così
+            description.put("evaluations", evaluations);
+            description.put("stepsInterval", stepsInterval);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return description;
     }
     
 }
